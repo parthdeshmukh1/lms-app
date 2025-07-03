@@ -8,7 +8,7 @@ import MemberManagement from './components/MemberManagement';
 import BorrowReturn from './components/BorrowReturn';
 import OverdueFines from './components/OverdueFines';
 import Notifications from './components/Notifications';
-import {getBooks} from './api/bookService.js';
+import {getBooks,getBookById,addBook,updateBook,deleteBook} from './api/bookService.js';
 
 export default function App() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -47,18 +47,48 @@ export default function App() {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    const testBooks = () => {
-        getBooks().then(response => {
-            console.log(response.data);
-        }).catch(error => {
-            console.error("Error fetching books:", error);
-        });
-    }
+    // Test all Book APIs
+    const testBooks = async () => {
+        try {
+            // 1. Get all books
+            const allBooks = await getBooks();
+            console.log('GET /api/books:', allBooks.data);
+
+            // 2. Add a new book
+            const newBook = {
+                title: 'Test Title',
+                author: 'Test Author',
+                genre: 'test genere',
+                isbn: '567890' + Math.floor(Math.random() * 1000000),
+                yearPublished: 2001,
+                availableCopies: 7,
+                totalCopies: 5
+            };
+            const added = await addBook(newBook);
+            console.log('POST /api/books:', added.data);
+            const newBookId = Number(added.data.bookId);
+
+            // 3. Get book by ID
+            const byId = await getBookById(newBookId);
+            console.log(`GET /api/books/${newBookId}:`, byId.data);
+
+            // 4. Update book
+            const updatedBook = { ...byId.data, title: 'Updated Test Book' };
+            const updated = await updateBook(newBookId, updatedBook);
+            console.log(`PUT /api/books/${newBookId}:`, updated.data);
+
+            // 5. Delete book
+            const deleted = await deleteBook(newBookId);
+            console.log(`DELETE /api/books/${newBookId}:`, deleted.data || 'Deleted');
+        } catch (error) {
+            console.error('Book API test error:', error);
+        }
+    };
 
     return (
         <Router>
             <div className="min-h-screen flex flex-col">
-            <button onClick={() => testBooks()}>Test Book</button>
+                <button onClick={() => testBooks()}>Test Book</button>
                 {/* Header */}
                 <header className="bg-primary text-white shadow-md">
                     <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -147,6 +177,7 @@ export default function App() {
                     <main className="flex-1 p-4 md:p-6 overflow-auto">
                         <div className="container mx-auto">
                             <Routes>
+                                <Route path="/" element={<Dashboard books={books} members={members} transactions={transactions} />} />
                                 <Route path="/dashboard" element={<Dashboard books={books} members={members} transactions={transactions} />} />
                                 <Route path="/books" element={<BookManagement books={books} setBooks={setBooks} />} />
                                 <Route path="/members" element={<MemberManagement members={members} setMembers={setMembers} />} />

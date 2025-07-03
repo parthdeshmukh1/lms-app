@@ -10,7 +10,15 @@ const bookServiceApi = axios.create({
 });
 
 export const getBooks = () => bookServiceApi.get('');
-export const addBook = (bookData) => bookServiceApi.post('/', bookData);
+export const getBookById = (bookId) => bookServiceApi.get(`/${bookId}`);
+export const addBook = (bookData) => {
+  console.log('addBook request body:', {...bookData});
+  return bookServiceApi.post('', { ...bookData }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
 export const updateBook = (bookId, bookData) => bookServiceApi.put(`/${bookId}`, bookData);
 export const deleteBook = (bookId) => bookServiceApi.delete(`/${bookId}`);
 
