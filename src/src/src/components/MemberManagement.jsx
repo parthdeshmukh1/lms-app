@@ -187,12 +187,12 @@ export default function MemberManagement() {
                     >
                       <i className="fas fa-edit"></i>
                     </button>
-                    {/* <button
+                    <button
                       className="text-red-500 hover:text-red-700"
                       onClick={() => handleDeleteMember(member.memberId)}
                     >
                       <i className="fas fa-trash"></i>
-                    </button> */}
+                    </button>
                   </td>
                   <td className="py-3 px-4">{member.address}</td>
                 </tr>

@@ -17,7 +17,7 @@ export default function BorrowReturn() {
   const [selectedMember, setSelectedMember] = useState("");
   const [borrowDate, setBorrowDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  // const [actionType, setActionType] = useState("borrow");
+  const [actionType, setActionType] = useState("borrow");
 
   useEffect(() => {
     dispatch(fetchTransactions());
@@ -103,13 +103,11 @@ export default function BorrowReturn() {
                   onChange={(e) => setSelectedBook(e.target.value)}
                 >
                   <option value="">Select a book</option>
-                  {books
-                    .filter((book) => book.availableCopies > 0)
-                    .map((book) => (
-                      <option key={book.bookId} value={book.bookId}>
-                        {book.title} by {book.author}
-                      </option>
-                    ))}
+                  {books.map((book) => (
+                    <option key={book.bookId} value={book.bookId}>
+                      {book.title} by {book.author}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -123,13 +121,11 @@ export default function BorrowReturn() {
                   onChange={(e) => setSelectedMember(e.target.value)}
                 >
                   <option value="">Select a member</option>
-                  {members
-                    .filter((member) => member.status === "ACTIVE" || member.membershipStatus === "ACTIVE")
-                    .map((member) => (
-                      <option key={member.memberId} value={member.memberId}>
-                        {member.name} ({member.email})
-                      </option>
-                    ))}
+                  {members.map((member) => (
+                    <option key={member.memberId} value={member.memberId}>
+                      {member.name} ({member.email})
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -145,7 +141,7 @@ export default function BorrowReturn() {
           <div className="p-5">
             <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
             <div className="space-y-4">
-              {transactions.slice(0, 2).map((transaction) => {
+              {transactions.slice(0, 3).map((transaction) => {
                 return (
                   <div
                     key={transaction.transactionId}
@@ -156,12 +152,13 @@ export default function BorrowReturn() {
                         {transaction.book?.title}
                       </span>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs ${transaction.status === "BORROWED"
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          transaction.status === "BORROWED"
                             ? "bg-yellow-100 text-yellow-800"
                             : transaction.status === "OVERDUE"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-green-100 text-green-800"
-                          }`}
+                            ? "bg-red-100 text-red-800"
+                            : "bg-green-100 text-green-800"
+                        }`}
                       >
                         {transaction.status}
                       </span>
@@ -213,12 +210,13 @@ export default function BorrowReturn() {
                       <td className="py-3 px-4">{transaction.dueDate}</td>
                       <td className="py-3 px-4">
                         <button
-                          className={`px-2 py-1 rounded-full text-xs ${transaction.status === "BORROWED"
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            transaction.status === "BORROWED"
                               ? "bg-yellow-100 text-yellow-800"
                               : transaction.status === "OVERDUE"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-green-100 text-green-800"
-                            }`}
+                              ? "bg-red-100 text-red-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
                           onClick={() => {
                             if (
                               transaction.status === "BORROWED" ||

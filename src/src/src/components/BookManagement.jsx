@@ -47,7 +47,12 @@ export default function BookManagement() {
     }
 
     // Validation checks
-    if (isNaN(totalCopies) || totalCopies < 0) {
+    if (
+      isNaN(totalCopies) ||
+      isNaN(availableCopies) ||
+      totalCopies < 0 ||
+      availableCopies < 0
+    ) {
       setErrorMessage(
         "Total and Available Copies must be non-negative numbers."
       );
@@ -73,7 +78,7 @@ export default function BookManagement() {
     const book = {
       ...newBook,
       yearPublished: parseInt(newBook.yearPublished),
-      availableCopies: parseInt(newBook.totalCopies),
+      availableCopies: parseInt(newBook.availableCopies),
       totalCopies: parseInt(newBook.totalCopies),
     };
     dispatch(createBook(book));
@@ -220,12 +225,12 @@ export default function BookManagement() {
                     >
                       <i className="fas fa-edit"></i>
                     </button>
-                    {/* <button
+                    <button
                       className="text-red-500 hover:text-red-700"
                       onClick={() => handleDeleteBook(book.bookId)}
                     >
                       <i className="fas fa-trash"></i>
-                    </button> */}
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -362,7 +367,7 @@ export default function BookManagement() {
                   />
                 </div>
 
-                {/* <div>
+                <div>
                   <label className="block text-sm font-medium mb-1">
                     Available Copies
                   </label>
@@ -378,7 +383,7 @@ export default function BookManagement() {
                       });
                     }}
                   />
-                </div> */}
+                </div>
               </div>
               {/* Buttons */}
               <div className="flex justify-end space-x-3 mt-6">
