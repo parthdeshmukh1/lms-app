@@ -8,6 +8,19 @@ import MemberManagement from "./components/MemberManagement";
 import BorrowReturn from "./components/BorrowReturn";
 import OverdueFines from "./components/OverdueFines";
 import Notifications from "./components/Notifications";
+
+import {
+  getFines,
+  getFineById,
+  getFinesByMemberId,
+  getPendingFines,
+  getTotalPendingFinesByMember,
+  createFine,
+  payFine,
+  updateFines,
+  deleteFine,
+} from "./api/fineService.js";
+
 // import {
 //   getBooks,
 //   getBookById,
@@ -207,41 +220,96 @@ export default function App() {
   //   }
   // };
 
-  const testTransactions = async () => {
-    console.log("📦 Test Transactions Initiated");
+  // const testTransactions = async () => {
+  //   console.log("📦 Test Transactions Initiated");
+
+  //   try {
+  //     // 1. ✅ Fetch All Transactions
+  //     const all = await getTransactions();
+  //     console.log("GET /api/transactions:", all.data);
+
+  //     // 2. ✅ Borrow a Book (Create Transaction)
+  //     const transactionData = {
+  //       bookId: 3, // Make sure these exist
+  //       memberId: 3,
+  //       borrowDate: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
+  //       dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+  //         .toISOString()
+  //         .slice(0, 10), // 2 weeks ahead
+  //     };
+  //     const created = await borrowBook(transactionData);
+  //     console.log("POST /api/transactions/borrow:", created);
+
+  //     const transactionId = created.data.transactionId;
+
+  //     // 3. ✅ Get Transaction by ID
+  //     const byId = await getTransactionById(transactionId);
+  //     console.log(`GET /api/transactions/${transactionId}:`, byId.data);
+
+  //     // 4. ✅ Return Book
+  //     const returned = await returnBook(transactionId);
+  //     console.log(
+  //       `PUT /api/transactions/${transactionId}/return:`,
+  //       returned.data
+  //     );
+  //   } catch (error) {
+  //     console.error(
+  //       "❌ Error in Transaction Test:",
+  //       error.response?.data || error.message
+  //     );
+  //   }
+  // };
+
+  const testFines = async () => {
+    console.log("📦 Test Fines Initiated");
 
     try {
-      // 1. ✅ Fetch All Transactions
-      const all = await getTransactions();
-      console.log("GET /api/transactions:", all.data);
+      // 1. ✅ Fetch All Fines
+      const all = await getFines();
+      console.log("GET /api/fines:", all.data);
 
-      // 2. ✅ Borrow a Book (Create Transaction)
-      const transactionData = {
-        bookId: 3, // Make sure these exist
-        memberId: 3,
-        borrowDate: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
-        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .slice(0, 10), // 2 weeks ahead
-      };
-      const created = await borrowBook(transactionData);
-      console.log("POST /api/transactions/borrow:", created);
+      // 2. ✅ Create a Fine
+      const transactionId = 8; // Make sure this exists
+      const fineType = "LATE_RETURN"; // Example fine type
+      const created = await createFine(transactionId, fineType);
+      console.log("POST /api/fines/{transactionId}/{fineType}:", created.data);
 
-      const transactionId = created.data.transactionId;
+      const fineId = created.data.fineDTO.fineId;
 
-      // 3. ✅ Get Transaction by ID
-      const byId = await getTransactionById(transactionId);
-      console.log(`GET /api/transactions/${transactionId}:`, byId.data);
+      // 3. ✅ Get Fine by ID
+      const byId = await getFineById(fineId);
+      console.log(`GET /api/fines/${fineId}:`, byId.data);
 
-      // 4. ✅ Return Book
-      const returned = await returnBook(transactionId);
+      // 4. ✅ Get Fines by Member ID
+      const memberId = 1; // Make sure this exists
+      const memberFines = await getFinesByMemberId(memberId);
+      console.log(`GET /api/fines/member/${memberId}:`, memberFines.data);
+
+      // 5. ✅ Get Pending Fines
+      const pending = await getPendingFines();
+      console.log("GET /api/fines/pending:", pending.data);
+
+      // 6. ✅ Get Total Pending Fines by Member ID
+      const totalPending = await getTotalPendingFinesByMember(memberId);
       console.log(
-        `PUT /api/transactions/${transactionId}/return:`,
-        returned.data
+        `GET /api/fines/member/${memberId}/total:`,
+        totalPending.data
       );
+
+      // 7. ✅ Pay Fine
+      const paid = await payFine(fineId);
+      console.log(`PUT /api/fines/${fineId}/pay:`, paid.data);
+
+      // 8. ✅ Update Fines
+      const updated = await updateFines();
+      console.log("PUT /api/fines/update-fines:", updated.data);
+
+      // 9. ✅ Delete Fine
+      const deleted = await deleteFine(fineId);
+      console.log(`DELETE /api/fines/${fineId}:`, deleted.data || "Deleted");
     } catch (error) {
       console.error(
-        "❌ Error in Transaction Test:",
+        "❌ Error in Fines Test:",
         error.response?.data || error.message
       );
     }
@@ -250,7 +318,7 @@ export default function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
-        <button onClick={() => testTransactions()}>Test Transactions</button>
+        <button onClick={() => testFines()}>Test Transactions</button>
         {/* Header */}
         <header className="bg-primary text-white shadow-md">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
