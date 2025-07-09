@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBooks } from "../features/books/bookSlice.js";
-import {
-  fetchMembers,
-} from "../features/members/memberSlice.js";
+import { fetchMembers } from "../features/members/memberSlice.js";
 import { fetchTransactions } from "../features/transactions/transactionSlice.js";
 
 export default function Dashboard() {
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   // Get books from Redux
   const books = useSelector((state) => state.book.books);
@@ -100,8 +98,10 @@ export default function Dashboard() {
                         <td className="py-3">
                           <span
                             className={`px-2 py-1 rounded-full text-xs ${
-                              transaction.status === "Borrowed"
+                              transaction.status === "BORROWED"
                                 ? "bg-yellow-100 text-yellow-800"
+                                : transaction.status === "OVERDUE"
+                                ? "bg-red-100 text-red-800"
                                 : "bg-green-100 text-green-800"
                             }`}
                           >

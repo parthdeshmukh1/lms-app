@@ -225,12 +225,6 @@ export default function BookManagement() {
                     >
                       <i className="fas fa-edit"></i>
                     </button>
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDeleteBook(book.bookId)}
-                    >
-                      <i className="fas fa-trash"></i>
-                    </button>
                   </td>
                 </tr>
               ))}

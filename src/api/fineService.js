@@ -15,7 +15,10 @@ export const getTotalPendingFinesByMember = (memberId) =>
 export const createFine = (transactionId, fineType) =>
   fineServiceApi.post(`/${transactionId}/${fineType}`);
 export const payFine = (fineId) => fineServiceApi.put(`/${fineId}/pay`);
+export const reverseFine = (fineId) =>
+  fineServiceApi.put(`/${fineId}/reverse`);
 export const updateFines = () => fineServiceApi.put("/update-fines");
 export const deleteFine = (fineId) => fineServiceApi.delete(`/${fineId}`);
+export const cancelFine = (fineId) => fineServiceApi.put(`/${fineId}/cancel`);
 
 export default fineServiceApi;
