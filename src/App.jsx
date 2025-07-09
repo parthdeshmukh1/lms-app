@@ -318,7 +318,7 @@ export default function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
-        <button onClick={() => testFines()}>Test Transactions</button>
+        {/* <button onClick={() => testFines()}>Test Transactions</button> */}
         {/* Header */}
         <header className="bg-primary text-white shadow-md">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
