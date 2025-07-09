@@ -34,7 +34,7 @@ export default function BorrowReturn() {
         dueDate: returnDate,
       };
 
-      dispatch(borrowBookThunk(transaction)); // replace with your Redux dispatch function
+      dispatch(createTransaction(transaction)); // replace with your Redux dispatch function
       // Reset form
       setSelectedBook("");
       setSelectedMember("");
